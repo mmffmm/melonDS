@@ -150,6 +150,7 @@ void EmuThread::run()
     emuInstance->fastForwardToggled = false;
     emuInstance->slowmoToggled = false;
     emuInstance->speedStepToggled = false;
+    emuInstance->speedMultiplier = 1.0;
 
     while (emuStatus != emuStatus_Exit)
     {
@@ -334,6 +335,8 @@ void EmuThread::run()
             if (emuInstance->hotkeyPressed(HK_FastForwardToggle)) emuInstance->fastForwardToggled = !emuInstance->fastForwardToggled;
             if (emuInstance->hotkeyPressed(HK_SlowMoToggle)) emuInstance->slowmoToggled = !emuInstance->slowmoToggled;
             if (emuInstance->hotkeyPressed(HK_SpeedStep)) emuInstance->speedStepToggled = !emuInstance->speedStepToggled;
+            if (emuInstance->hotkeyPressed(HK_SpeedStepUp)) emuInstance->speedMultiplier = std::min(emuInstance->speedMultiplier + 0.5, 16.0);
+            if (emuInstance->hotkeyPressed(HK_SpeedStepDown)) emuInstance->speedMultiplier = std::max(emuInstance->speedMultiplier - 0.5, 0.5);
 
             if (emuInstance->hotkeyPressed(HK_AudioMuteToggle)) emuInstance->toggleAudioMute();
 
@@ -361,7 +364,7 @@ void EmuThread::run()
             else if (fastforward) emuInstance->curFPS = emuInstance->fastForwardFPS;
             else if (emuInstance->speedStepToggled) emuInstance->curFPS = emuInstance->targetFPS * 2.0;
             else if (!emuInstance->doLimitFPS && !emuInstance->doAudioSync) emuInstance->curFPS = 1000.0;
-            else emuInstance->curFPS = emuInstance->targetFPS;
+            else emuInstance->curFPS = emuInstance->targetFPS * emuInstance->speedMultiplier;
 
             if (emuInstance->audioDSiVolumeSync && emuInstance->nds->ConsoleType == 1)
             {
