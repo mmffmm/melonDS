@@ -57,6 +57,8 @@ enum
     HK_GuitarGripYellow,
     HK_GuitarGripBlue,
     HK_SpeedStep,
+    HK_SpeedStepUp,
+    HK_SpeedStepDown,
     HK_MAX
 };
 
@@ -305,6 +307,7 @@ public:
     bool fastForwardToggled;
     bool slowmoToggled;
     bool speedStepToggled;
+    double speedMultiplier;
     bool doAudioSync;
 private:
 
